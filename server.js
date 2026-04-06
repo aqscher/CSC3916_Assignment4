@@ -189,6 +189,13 @@ router.route('/reviews')
             if (!movie) {
                 return res.status(404).json({ success: false, message: 'Movie not found.' });
             }
+            const existingReview = await Review.findOne({
+                movieId: req.body.movieId,
+                username: req.body.username,
+            });
+            if (existingReview) {
+                return res.status(409).json({ success: false, message: 'You have already reviewed this movie.' });
+            }
             const review = new Review({
                 movieId: req.body.movieId,
                 username: req.body.username,
